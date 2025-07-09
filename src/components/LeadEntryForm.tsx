@@ -262,6 +262,36 @@ const LeadEntryForm: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate essential fields before proceeding
+    const validationErrors: string[] = [];
+    
+    // Check if essential fields are filled
+    if (!formData.firstName.trim()) {
+      validationErrors.push('First Name is required');
+    }
+    
+    if (!formData.lastName.trim()) {
+      validationErrors.push('Last Name is required');
+    }
+    
+    if (!formData.email.trim()) {
+      validationErrors.push('Email is required');
+    } else {
+      // Basic email format validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email.trim())) {
+        validationErrors.push('Please enter a valid email address');
+      }
+    }
+    
+    // If there are validation errors, show them and stop submission
+    if (validationErrors.length > 0) {
+      setSubmitStatus('error');
+      setStatusMessage(validationErrors.join('. '));
+      return;
+    }
+    
     setIsSubmitting(true);
     setSubmitStatus('idle');
     setStatusMessage('');
